@@ -5,12 +5,7 @@
 
 def coprime?(num_1, num_2)
   min = (num_1 <= num_2)? num_1 : num_2
-  (2..min).each do |div| 
-    if (num_1 % div == 0 && num_2 % div == 0)
-      return false
-    end
-  end
-  true
+  (2..min).none? { |div| num_1 % div == 0 && num_2 % div == 0 }
 end
 
 p coprime?(25, 12)    # => true
