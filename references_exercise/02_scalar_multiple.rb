@@ -7,7 +7,8 @@
 # to be the same before and after calling your method.
 
 def scalar_multiple!(array, multiplier)
-
+  array.map! { |num| num * multiplier }
+  array
 end
 
 
