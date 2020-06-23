@@ -22,13 +22,12 @@ end
 
 # Returns the sentence with words alternating between uppercase and lowercase
 def alternating_case(sent)
-  new_arr = []
-  sent.split(" ").each_with_index do |word, i|
+  new_words = sent.split(" ").map.with_index do |word, i|
     if i.even?
-      new_arr << word.upcase
+      word.upcase
     else
-      new_arr << word.downcase
+      word.downcase
     end
   end
-  new_arr.join(" ")
+  new_words.join(" ")
 end
