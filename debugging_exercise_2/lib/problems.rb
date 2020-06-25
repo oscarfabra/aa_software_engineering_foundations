@@ -26,19 +26,9 @@ end
 # Returns an hash where keys are the elements that were repeated in the array 
 # and values are the indices where that element appears
 def dupe_indices(arr)
-  hash = Hash.new(0)
-  arr.each { |ele| hash[ele] += 1 }
-  repeated = hash.select { |ele, n| n > 1 }
-  new_hash = {}
-  repeated.keys.each { |ele| new_hash[ele] = indices_array(arr, ele) }
-  new_hash
-end
-
-# Returns an array with the indices where the given element appears
-def indices_array(arr, ele)
-  indices = []
-  arr.each_with_index { |e, i| indices << i if e == ele }
-  indices
+  hash = Hash.new { |hash, k| hash[k] = [] }
+  arr.each_with_index { |ele, i| hash[ele] << i }
+  hash.select { |ele, arr| arr.length > 1 }
 end
 
 # Returns true when the given arrays contain the same elements, in any order
