@@ -45,4 +45,27 @@ class Bootcamp
   def enrolled?(student)
     @students.any? { |s| s.downcase == student.downcase }
   end
+
+  # Returns the ratio between # students to 1 teacher
+  def student_to_teacher_ratio
+    @students.length / @teachers.length
+  end
+
+  # Adds the given grade to the student's grades array inside the @grades hash
+  def add_grade(student, grade)
+    return false if !enrolled?(student)
+    @grades[student] << grade
+    true
+  end
+
+  # Returns the number of grades the given student has
+  def num_grades(student)
+    @grades[student].length
+  end
+
+  # Returns the student's average grade rounded down to the nearest integer
+  def average_grade(student)
+    return nil if !enrolled?(student) || @grades[student].length == 0
+    @grades[student].sum / @grades[student].length
+  end
 end
