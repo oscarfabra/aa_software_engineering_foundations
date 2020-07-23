@@ -25,4 +25,35 @@ class Array
     self.each { |ele| count[ele] += 1 }
     count
   end
+
+  # Returns the number of times a value appears in the array
+  def my_count(ele)
+    self.counts[ele]
+  end
+
+  # Returns the index where the given element is found in the array
+  def my_index(ele)
+    return nil if my_count(ele) == 0
+    self.each_with_index { |val, i| return i if val == ele }
+  end
+
+  # Returns a new array without duplicate elements in the order they first 
+  # appeared in the original array
+  def my_uniq
+    new_arr = []
+    self.counts.each_key { |ele| new_arr << ele }
+    new_arr
+  end
+
+  # Transposes a 2D array with square dimensions by returning a new 2D array where the 
+  # horizontal rows are converted to vertical columns
+  def my_transpose
+    new_arr = Array.new(self.length) { Array.new(self.length) }
+    self.each_with_index do |val_i, i|
+      self.each_with_index do |val_j, j|
+        new_arr[i][j] = self[j][i]
+      end
+    end
+    new_arr
+  end
 end
