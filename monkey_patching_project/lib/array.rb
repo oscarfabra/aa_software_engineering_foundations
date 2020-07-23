@@ -40,17 +40,15 @@ class Array
   # Returns a new array without duplicate elements in the order they first 
   # appeared in the original array
   def my_uniq
-    new_arr = []
-    self.counts.each_key { |ele| new_arr << ele }
-    new_arr
+    self.counts.keys
   end
 
   # Transposes a 2D array with square dimensions by returning a new 2D array where the 
   # horizontal rows are converted to vertical columns
   def my_transpose
     new_arr = Array.new(self.length) { Array.new(self.length) }
-    self.each_with_index do |val_i, i|
-      self.each_with_index do |val_j, j|
+    (0...self.length).each do |i|
+      (0...self.length).each do |j|
         new_arr[i][j] = self[j][i]
       end
     end
