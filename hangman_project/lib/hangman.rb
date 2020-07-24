@@ -48,4 +48,54 @@ class Hangman
   def fill_indices(char, indices)
     indices.each { |i| @guess_word[i] = char }
   end
+
+  # Checks the given guessed char and acts accordingly
+  def try_guess(char)
+    if self.already_attempted?(char)
+      puts "That has already been attempted"
+      false
+    else
+      @attempted_chars << char
+      indices = self.get_matching_indices(char)
+      (indices.empty?)? @remaining_incorrect_guesses -= 1 : self.fill_indices(char, indices)
+      true
+    end
+  end
+
+  # Asks the user for a guess and proceeds accrodingly
+  def ask_user_for_guess
+    print "Enter a char: "
+    char = gets.chomp
+    self.try_guess(char)
+  end
+
+  # Checks whether the user has won or not
+  def win?
+    if @guess_word.join.downcase == @secret_word.downcase
+      puts "YOU WIN"
+      true
+    else
+      false
+    end
+  end
+
+  # Checks whether the user has lost or not
+  def lose?
+    if @remaining_incorrect_guesses == 0
+      puts "YOU LOSE"
+      true
+    else
+      false
+    end
+  end
+
+  # Checks whether the game has ended or not
+  def game_over?
+    if self.win? || self.lose?
+      puts @secret_word
+      true
+    else
+      false
+    end
+  end
 end
