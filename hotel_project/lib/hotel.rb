@@ -20,7 +20,7 @@ class Hotel
 
   # Tells whether a given room exists in the hotel
   def room_exists?(name)
-    @rooms[name] != nil
+    @rooms.has_key?(name)
   end
 
   # Checks in the given person in the given room
