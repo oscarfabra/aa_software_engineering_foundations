@@ -43,4 +43,25 @@ class Startup
   def payday
     @employees.each { |employee| self.pay_employee(employee) }
   end
+
+  # Returns a number representing the average employee salary
+  def average_salary
+    sum = 0
+    @employees.each { |employee| sum += @salaries[employee.title] }
+    sum / @employees.length
+  end
+
+  # Closes our startup
+  def close
+    @employees = []
+    @funding = 0
+  end
+
+  # Acquires the given startup
+  def acquire(startup)
+    @funding += startup.funding
+    startup.salaries.each { |title, salary| @salaries[title] = salary if !self.valid_title?(title) }
+    @employees += startup.employees
+    startup.close
+  end
 end
