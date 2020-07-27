@@ -16,8 +16,7 @@ class Code
   # Initializes a new Code instance
   def initialize(pegs)
     raise "Invalid pegs" if !Code.valid_pegs?(pegs)
-    @pegs = pegs
-    @pegs.map!(&:upcase)
+    @pegs = pegs.map(&:upcase)
   end
 
   # Returns a Code instance with a randomized pegs array of the given length
