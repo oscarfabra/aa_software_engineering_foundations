@@ -21,4 +21,55 @@ class Board
   def num_ships
     @grid.flatten.count(:S)
   end
+
+  # Attacks a position in the @grid and acts accordingly
+  def attack(pos)
+    if self[pos] == :S
+      self[pos] = :H
+      puts "You sunk my battleship!"
+      true
+    else
+      self[pos] = :X
+      false
+    end
+  end
+
+  # Randomly sets 25% of the @grid's elements to :S
+  def place_random_ships
+    ships = (@size.to_f / 4).floor
+    side = @grid.length
+    while self.num_ships < ships
+      @grid[rand(side)][rand(side)] = :S
+    end
+  end
+
+  # Returns a 2D array representing the grid where every :S is replaced with
+  # an :N
+  def hidden_ships_grid
+    hidden_grid = []
+    @grid.each do |row|
+      hidden_row = []
+      row.each do |ele|
+        (ele == :S)? hidden_row << :N : hidden_row << ele
+      end
+      hidden_grid << hidden_row
+    end
+    hidden_grid
+  end
+
+  # Prints each row of @grid so every element in a row is separated with 
+  # a space
+  def self.print_grid(grid)
+    grid.each { |row| puts row.join(" ") }
+  end
+
+  # Calls Board::print_grid with @grid as an arg
+  def cheat
+    Board.print_grid(@grid)
+  end
+
+  # Calls Board::print_grid with the #hidden_ships_grid as an arg
+  def print
+    Board.print_grid(self.hidden_ships_grid)
+  end
 end
