@@ -1,6 +1,12 @@
 class Board
   attr_reader :size
 
+  # Prints each row of @grid so every element in a row is separated with 
+  # a space
+  def self.print_grid(grid)
+    grid.each { |row| puts row.join(" ") }
+  end
+
   # Creates a new Board instance
   def initialize(n)
     @grid = Array.new(n) { Array.new(n, :N) }
@@ -46,21 +52,11 @@ class Board
   # Returns a 2D array representing the grid where every :S is replaced with
   # an :N
   def hidden_ships_grid
-    hidden_grid = []
-    @grid.each do |row|
-      hidden_row = []
-      row.each do |ele|
-        (ele == :S)? hidden_row << :N : hidden_row << ele
+    @grid.map do |row|
+      row.map do |ele|
+        (ele == :S)? :N : ele
       end
-      hidden_grid << hidden_row
     end
-    hidden_grid
-  end
-
-  # Prints each row of @grid so every element in a row is separated with 
-  # a space
-  def self.print_grid(grid)
-    grid.each { |row| puts row.join(" ") }
   end
 
   # Calls Board::print_grid with @grid as an arg

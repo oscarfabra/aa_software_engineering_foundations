@@ -40,9 +40,8 @@ class Battleship
   # Gets a move from the player and acts accordingly
   def turn
     pos = @player.get_move
-    @board.attack(pos)
+    @remaining_misses -= 1 if !@board.attack(pos)
     @board.print
-    @remaining_misses -= 1 if board[pos] == :X
     puts "#{@remaining_misses} remaining misses."
   end
 end
