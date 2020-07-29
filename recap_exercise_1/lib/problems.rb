@@ -9,13 +9,12 @@ def all_vowel_pairs(words)
   pairs = []
   (0...words.length - 1).each do |i|
     (i + 1...words.length).each do |j|
-       pair = "#{words[i]} #{words[j]}"
-       pairs << pair if "aeiou".split("").all? { |v| pair.split("").include?(v) }
+       pair = words[i] + " " + words[j]
+       pairs << pair if "aeiou".split("").all? { |v| pair.include?(v) }
     end
   end
   pairs
 end
-
 
 # Write a method, composite?, that takes in a number and returns a boolean indicating if the number
 # has factors besides 1 and itself
@@ -29,7 +28,6 @@ def composite?(num)
   false
 end
 
-
 # A bigram is a string containing two letters.
 # Write a method, find_bigrams, that takes in a string and an array of bigrams.
 # The method should return an array containing all bigrams found in the string.
@@ -40,16 +38,7 @@ end
 # find_bigrams("the theater is empty", ["cy", "em", "ty", "ea", "oo"])  # => ["em", "ty", "ea"]
 # find_bigrams("to the moon and back", ["ck", "oo", "ha", "at"])        # => ["ck", "oo"]
 def find_bigrams(str, bigrams)
-  bigrams.select do |bg|
-    found = false
-    (0...str.length - 1).each do |i| 
-      if str[i] == bg[0] && str[i + 1] == bg[1]
-        found = true
-        break
-      end
-    end
-    found
-  end
+  bigrams.select { |bg| str.include?(bg) }
 end
 
 class Hash
@@ -68,7 +57,9 @@ class Hash
     # hash_2.my_select                            # => {4=>4}
     def my_select(&prc)
       prc ||= Proc.new { |k, v| k == v }
-      self.select(&prc)
+      new_hash = {}
+      self.each { |k, v| new_hash[k] = v if prc.call(k, v) }
+      new_hash
     end
 end
 
@@ -84,17 +75,13 @@ class String
     def substrings(length = nil)
       subs = []
       (0...self.length).each do |i|
-        substr = self[i]
-        subs << substr
-        (i + 1...self.length).each do |j|
-          substr += self[j]
-          subs << substr
+        (i...self.length).each do |j|
+          subs << self[i..j]
         end
       end
-      return subs if !length
+      return subs if length.nil?
       subs.select { |ss| ss.length == length }
     end
-
 
     # Write a method, String#caesar_cipher, that takes in a number.
     # The method should return a new string where each char of the original string is shifted
