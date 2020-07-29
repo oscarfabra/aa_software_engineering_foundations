@@ -54,7 +54,7 @@ end
 # sum_array([5, 2])         # => 7
 # sum_array([4, 10, -1, 2]) # => 15
 def sum_array(array)
-  return 0 if array == []
+  return 0 if array.empty?
   array.shift + sum_array(array)
 end
 
@@ -71,7 +71,7 @@ end
 # reverse_string("internet")    # => "tenretni"
 # reverse_string("friends")     # => "sdneirf"
 def reverse_string(str)
-  return str if str.length == 0 || str.length == 1
+  return str if str.empty?
   str[-1] + reverse_string(str[0...-1])
 end
 
@@ -105,7 +105,8 @@ end
 #     2-dimensional array: [['some data']]
 #     3-dimensional array: [[['some data']]]
 def flatten(data)
-  return [data] if !data.instance_of?(Array)
-  return [] if data == []
-  flatten(data[0]) + flatten(data[1..-1])
+  return [data] if !data.is_a?(Array)
+  new_arr = []
+  data.each { |ele| new_arr += flatten(ele) }
+  new_arr
 end
