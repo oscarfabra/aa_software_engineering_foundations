@@ -6,7 +6,14 @@
 #
 # all_vowel_pairs(["goat", "action", "tear", "impromptu", "tired", "europe"])   # => ["action europe", "tear impromptu"]
 def all_vowel_pairs(words)
-
+  pairs = []
+  (0...words.length - 1).each do |i|
+    (i + 1...words.length).each do |j|
+       pair = "#{words[i]} #{words[j]}"
+       pairs << pair if "aeiou".split("").all? { |v| pair.split("").include?(v) }
+    end
+  end
+  pairs
 end
 
 
@@ -18,7 +25,8 @@ end
 # composite?(9)     # => true
 # composite?(13)    # => false
 def composite?(num)
-
+  (2..num / 2).each { |n| return true if num % n == 0 }
+  false
 end
 
 
@@ -32,7 +40,16 @@ end
 # find_bigrams("the theater is empty", ["cy", "em", "ty", "ea", "oo"])  # => ["em", "ty", "ea"]
 # find_bigrams("to the moon and back", ["ck", "oo", "ha", "at"])        # => ["ck", "oo"]
 def find_bigrams(str, bigrams)
-
+  bigrams.select do |bg|
+    found = false
+    (0...str.length - 1).each do |i| 
+      if str[i] == bg[0] && str[i + 1] == bg[1]
+        found = true
+        break
+      end
+    end
+    found
+  end
 end
 
 class Hash
@@ -50,12 +67,13 @@ class Hash
     # hash_2.my_select { |k, v| k + 1 == v }      # => {10=>11, 5=>6, 7=>8})
     # hash_2.my_select                            # => {4=>4}
     def my_select(&prc)
-
+      prc ||= Proc.new { |k, v| k == v }
+      self.select(&prc)
     end
 end
 
 class String
-    # Write a method, String#substrings, that takes in a optional length argument
+    # Write a method, String#substrings, that takes in an optional length argument
     # The method should return an array of the substrings that have the given length.
     # If no length is given, return all substrings.
     #
@@ -64,11 +82,21 @@ class String
     # "cats".substrings     # => ["c", "ca", "cat", "cats", "a", "at", "ats", "t", "ts", "s"]
     # "cats".substrings(2)  # => ["ca", "at", "ts"]
     def substrings(length = nil)
-
+      subs = []
+      (0...self.length).each do |i|
+        substr = self[i]
+        subs << substr
+        (i + 1...self.length).each do |j|
+          substr += self[j]
+          subs << substr
+        end
+      end
+      return subs if !length
+      subs.select { |ss| ss.length == length }
     end
 
 
-    # Write a method, String#caesar_cipher, that takes in an a number.
+    # Write a method, String#caesar_cipher, that takes in a number.
     # The method should return a new string where each char of the original string is shifted
     # the given number of times in the alphabet.
     #
@@ -78,6 +106,11 @@ class String
     # "bootcamp".caesar_cipher(2) #=> "dqqvecor"
     # "zebra".caesar_cipher(4)    #=> "difve"
     def caesar_cipher(num)
-
+      alpha = ("a".."z").to_a.join
+      new_arr = self.split("").map do |c|
+        i = (alpha.index(c) + num) % alpha.length
+        alpha[i]
+      end
+      new_arr.join
     end
 end
