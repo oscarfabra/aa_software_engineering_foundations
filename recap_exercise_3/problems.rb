@@ -1,24 +1,65 @@
 # Returns a new array containing the elements that were not repeated in arr
 def no_dupes?(arr)
-
+  hash = Hash.new(0)
+  arr.each { |ele| hash[ele] += 1 }
+  arr.select { |ele| hash[ele] == 1 }
 end
+
+# p no_dupes?([1, 1, 2, 1, 3, 2, 4])         # => [3, 4]
+# p no_dupes?(['x', 'x', 'y', 'z', 'z'])     # => ['y']
+# p no_dupes?([true, true, true])            # => []
 
 # Returns true if an element never appears consecutively in the array
 def no_consecutive_repeats?(arr)
-
+  (0...arr.length - 1).each do |i|
+    return false if arr[i] == arr[i + 1]
+  end
+  true
 end
+
+# p no_consecutive_repeats?(['cat', 'dog', 'mouse', 'dog'])     # => true
+# p no_consecutive_repeats?(['cat', 'dog', 'dog', 'mouse'])     # => false
+# p no_consecutive_repeats?([10, 42, 3, 7, 10, 3])              # => true
+# p no_consecutive_repeats?([10, 42, 3, 3, 10, 3])              # => false
+# p no_consecutive_repeats?(['x'])                              # => true
 
 # Returns a hash containing characters as keys. The value for each key is an
 # array containing the indices where that character is found
 def char_indices(str)
-
+  hash = Hash.new { |h, k| h[k] = [] }
+  str.each_char.with_index { |c, i| hash[c] << i }
+  hash
 end
+
+# p char_indices('mississippi')   # => {"m"=>[0], "i"=>[1, 4, 7, 10], "s"=>[2, 3, 5, 6], "p"=>[8, 9]}
+# p char_indices('classroom')     # => {"c"=>[0], "l"=>[1], "a"=>[2], "s"=>[3, 4], "r"=>[5], "o"=>[6, 7], "m"=>[8]}
 
 # Returns the longest streak of consecutive characters in the string. If there
 # are any ties, returns the streak that occurs later in the string.
 def longest_streak(str)
-
+  max_length = 0
+  max_streak = "" 
+  i = 0
+  while i < str.length
+    c = str[i]
+    streak = ""
+    while str[i] == c
+      streak += c
+      i += 1
+    end
+    if streak.length >= max_length
+      max_streak = streak
+      max_length = streak.length
+    end
+  end
+  max_streak
 end
+
+# p longest_streak('a')           # => 'a'
+# p longest_streak('accccbbb')    # => 'cccc'
+# p longest_streak('aaaxyyyyyzz') # => 'yyyyy
+# p longest_streak('aaabbb')      # => 'bbb'
+# p longest_streak('abc')         # => 'c'
 
 # Returns a boolean indicating whether or not the number is a bi-prime. 
 # A bi-prime is a positive integer that can be obtained by multiplying 
@@ -29,8 +70,33 @@ end
 # 25 is a bi-prime because 5 * 5
 # 24 is not a bi-prime because no two prime numbers have a product of 24
 def bi_prime?(num)
-
+  primes = get_primes_up_to(num / 2)
+  (0...primes.length).each do |i|
+    (i...primes.length).each do |j|
+      return true if primes[i] * primes[j] == num
+    end
+  end
+  false
 end
+
+# Returns an array with all the prime numbers up to num
+def get_primes_up_to(num)
+  (2..num).to_a.select { |n| is_prime?(n) }
+end
+
+# Returns true if the given number is a prime
+def is_prime?(n)
+  return false if n < 2
+  (2..n / 2).each { |i| return false if n % i == 0 }
+  true
+end
+
+# p bi_prime?(14)   # => true
+# p bi_prime?(22)   # => true
+# p bi_prime?(25)   # => true
+# p bi_prime?(94)   # => true
+# p bi_prime?(24)   # => false
+# p bi_prime?(64)   # => false
 
 # A Caesar cipher takes a word and encrypts it by offsetting each letter in the
 # word by a fixed number, called the key. Given a key of 3, for example: 
