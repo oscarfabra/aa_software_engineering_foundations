@@ -112,31 +112,83 @@ end
 # Accepts a string and a key-sequence as args, and returns the encrypted message. 
 # Assumes that the message consists of only lowercase alphabetic characters.
 def vigenere_cipher(message, keys)
-
+  alpha = ('a'..'z').to_a
+  arr = message.split("").map.with_index do |c, i|
+    offset = keys[i % keys.length]
+    new_letter_i = (alpha.index(c) + offset) % alpha.length
+    alpha[new_letter_i]
+  end
+  arr.join
 end
+
+# p vigenere_cipher("toerrishuman", [1])        # => "upfssjtivnbo"
+# p vigenere_cipher("toerrishuman", [1, 2])     # => "uqftsktjvobp"
+# p vigenere_cipher("toerrishuman", [1, 2, 3])  # => "uqhstltjxncq"
+# p vigenere_cipher("zebra", [3, 0])            # => "ceerd"
+# p vigenere_cipher("yawn", [5, 1])             # => "dbbo"
 
 # Returns the string where every vowel is replaced with the vowel the appears 
 # before it sequentially in the original string. The first vowel of the string 
 # should be replaced with the last vowel.
 def vowel_rotate(str)
-
+  vowels = "aeiou"
+  vowels_in_str = []
+  str.each_char { |c| vowels_in_str << c if vowels.include?(c) }
+  vowels_in_str.unshift(vowels_in_str.pop)
+  arr = str.split("").map do |c|
+    (vowels.include?(c))? vowels_in_str.shift : c
+  end
+  arr.join
 end
+
+# p vowel_rotate('computer')      # => "cempotur"
+# p vowel_rotate('oranges')       # => "erongas"
+# p vowel_rotate('headphones')    # => "heedphanos"
+# p vowel_rotate('bootcamp')      # => "baotcomp"
+# p vowel_rotate('awesome')       # => "ewasemo"
 
 class String
   # Returns a new string containing characters of the original string that return
   # true when passed into the block. If no block is passed, then it returns the
   # empty string. Must not use Array#select.
   def select(&prc)
-
+    prc ||= Proc.new { }
+    new_str = ""
+    self.each_char { |c| new_str += c if prc.call(c) }
+    new_str
   end
 
   # Modifies the existing string by replacing every character with the result of 
-  # calling the block, passing in the original character and its index.  Must not
+  # calling the block, passing in the original character and its index. Must not
   # use Array#map or Array#map!.
   def map!(&prc)
-
+    self.each_char.with_index do |c, i|
+      self[i] = prc.call(c, i)
+    end
   end
 end
+
+# word_1 = "Lovelace"
+# word_1.map! do |ch| 
+#     if ch == 'e'
+#         '3'
+#     elsif ch == 'a'
+#         '4'
+#     else
+#         ch
+#     end
+# end
+# p word_1        # => "Lov3l4c3"
+
+# word_2 = "Dijkstra"
+# word_2.map! do |ch, i|
+#     if i.even?
+#         ch.upcase
+#     else
+#         ch.downcase
+#     end
+# end
+# p word_2        # => "DiJkStRa"
 
 # Returns the product of a and b, recursively and without using the multiplication
 # operator (*)
