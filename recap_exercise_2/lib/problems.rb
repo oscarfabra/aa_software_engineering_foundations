@@ -11,23 +11,16 @@ def least_common_multiple(num_1, num_2)
 end
 
 
-# Write a method, most_frequent_bigram, that takes in a string and returns the two adjacent letters that appear the
-# most in the string.
+# Write a method, most_frequent_bigram, that takes in a string and returns 
+# the two adjacent letters that appear the most in the string.
 def most_frequent_bigram(str)
-  max_bg = ""
-  max_times = 0
+  count = Hash.new(0)
   (0...str.length - 1).each do |i|
     bg = str[i..i + 1]
-    times = 0
-    (0...str.length - 1).each do |j|
-      times += 1 if str[j..j + 1] == bg
-    end
-    if times > max_times
-      max_bg = bg
-      max_times = times
-    end
+    count[bg] += 1
   end
-  max_bg
+  sorted = count.sort_by { |k, v| v }
+  sorted.last[0]
 end
 
 
