@@ -37,7 +37,6 @@ end
 # Returns the longest streak of consecutive characters in the string. If there
 # are any ties, returns the streak that occurs later in the string.
 def longest_streak(str)
-  max_length = 0
   max_streak = "" 
   i = 0
   while i < str.length
@@ -47,10 +46,7 @@ def longest_streak(str)
       streak += c
       i += 1
     end
-    if streak.length >= max_length
-      max_streak = streak
-      max_length = streak.length
-    end
+    max_streak = streak if streak.length >= max_streak.length
   end
   max_streak
 end
@@ -87,8 +83,7 @@ end
 # Returns true if the given number is a prime
 def is_prime?(n)
   return false if n < 2
-  (2..n / 2).each { |i| return false if n % i == 0 }
-  true
+  (2..n / 2).none? { |i| n % i == 0 }
 end
 
 # p bi_prime?(14)   # => true
