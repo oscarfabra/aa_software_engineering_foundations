@@ -49,7 +49,7 @@ end
 def max_tie_breaker(arr, prc_1, &prc_2)
   arr.max do |a, b|
     if prc_2.call(a) == prc_2.call(b)
-      (prc_1.call(a) > prc_2.call(b))? 1 : -1
+      (prc_1.call(a) > prc_1.call(b))? 1 : -1
     elsif prc_2.call(a) > prc_2.call(b)
       1
     else
