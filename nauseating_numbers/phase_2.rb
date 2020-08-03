@@ -3,7 +3,14 @@
 # more divisors than any positive number less than 24. Math Fact: Numbers that
 # meet this criteria are also known as highly composite numbers.
 def anti_prime?(n)
+  divisors = Hash.new(0)
+  (2..n).each { |i| divisors[i] = divisors_count(i) }
+  sorted = divisors.sort_by { |k, v| v }
+  sorted.last[0] == n
+end
 
+def divisors_count(n)
+  (2..n / 2).to_a.count { |i| n % i == 0 }
 end
 
 # p anti_prime?(24)   # true
@@ -28,7 +35,13 @@ end
 # 2 5  +  9 1  =>  11 6
 # 4 7     3 0      7 7
 def matrix_addition(matrix_1, matrix_2)
-
+  new_matrix = Array.new(matrix_1.length) { Array.new(matrix_1[0].length) }
+  (0...matrix_1.length).each do |i|
+    (0...matrix_1[0].length).each do |j|
+      new_matrix[i][j] = matrix_1[i][j] + matrix_2[i][j]
+    end
+  end
+  new_matrix
 end
 
 # matrix_a = [[2,5], [4,7]]
@@ -47,7 +60,11 @@ end
 # the common divisors of 50 and 30 are 1, 2, 5, 10. Assumes that all of 
 # the arguments are positive integers.
 def mutual_factors(*args)
-
+  factors = []
+  (1..args.min).each do |i|
+    factors << i if args.all? { |n| n % i == 0 }
+  end
+  factors
 end
 
 # p mutual_factors(50, 30)            # [1, 2, 5, 10]
@@ -69,7 +86,9 @@ end
 # Accepts a number argument, n, and returns the n-th number of the tribonacci 
 # sequence.
 def tribonacci_number(n)
-
+  return 1 if n == 1 || n == 2
+  return 2 if n == 3
+  tribonacci_number(n - 1) + tribonacci_number(n - 2) + tribonacci_number(n - 3)
 end
 
 # p tribonacci_number(1)  # 1
