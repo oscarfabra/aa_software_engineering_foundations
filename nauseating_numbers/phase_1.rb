@@ -53,8 +53,7 @@ end
 # perfect squares; 35 is not a perfect square.
 def perfect_square?(n)
   i = 1
-  i += 1 while i * i <= n
-  i -= 1
+  i += 1 while i * i < n
   i * i == n
 end
 
