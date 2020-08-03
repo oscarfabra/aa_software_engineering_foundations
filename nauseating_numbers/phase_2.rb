@@ -35,7 +35,7 @@ end
 # 2 5  +  9 1  =>  11 6
 # 4 7     3 0      7 7
 def matrix_addition(matrix_1, matrix_2)
-  new_matrix = Array.new(matrix_1.length) { Array.new(matrix_1[0].length) }
+  new_matrix = Array.new(matrix_1.length) { Array.new(matrix_1[0].length, 0) }
   (0...matrix_1.length).each do |i|
     (0...matrix_1[0].length).each do |j|
       new_matrix[i][j] = matrix_1[i][j] + matrix_2[i][j]

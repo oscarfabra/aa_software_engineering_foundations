@@ -1,9 +1,18 @@
+require_relative 'phase_2.rb'
+
 # Accepts any number of matrices as arguments. The method returns a new matrix
 # representing the sum of the arguments. Matrix addition can only be performed 
 # on matrices of similar dimensions, so if all of the given matrices do not 
 # have the same "height" and "width", then return nil.
 def matrix_addition_reloaded(*matrices)
+  return nil if !matrices_with_equal_dimensions?(matrices)
+  new_matrix = Array.new(matrices[0].length) { Array.new(matrices[0][0].length, 0) }
+  matrices.each { |matrix| new_matrix = matrix_addition(new_matrix, matrix) }
+  new_matrix
+end
 
+def matrices_with_equal_dimensions?(matrices)
+  matrices.all? { |matrix| matrix.length == matrices[0].length && matrix[0].length == matrices[0][0].length }
 end
 
 # matrix_a = [[2,5], [4,7]]
@@ -24,7 +33,21 @@ end
 # same element. Assumes that the 2-dimensional array has "square" dimensions, 
 # meaning it's height is the same as it's width.
 def squarocol?(matrix)
+  row_with_same_element?(matrix) || col_with_same_element?(matrix)
+end
 
+def row_with_same_element?(matrix)
+  matrix.each do |row|
+    return true if row.all? { |ele| ele == row[0] }
+  end
+  false
+end
+
+def col_with_same_element?(matrix)
+  (0...matrix[0].length).each do |i|
+    return true if matrix.all? { |row| row[i] == matrix[0][i] }
+  end
+  false
 end
 
 # p squarocol?([
@@ -64,7 +87,21 @@ end
 # either of its diagonals. Assumes that the 2-dimensional array has "square" 
 # dimensions, meaning it's height is the same as it's width.
 def squaragonal?(matrix)
+  diagonal_1_with_same_element?(matrix) || diagonal_2_with_same_element?(matrix)
+end
 
+def diagonal_1_with_same_element?(matrix)
+  (0...matrix.length).each do |i|
+    return false if matrix[i][i] != matrix[0][0]
+  end
+  true
+end
+
+def diagonal_2_with_same_element?(matrix)
+  (0...matrix.length).each do |i|
+    return false if matrix[-1 - i][i] != matrix[-1][0]
+  end
+  true
 end
 
 # p squaragonal?([
@@ -106,7 +143,19 @@ end
 # Accepts a positive number, n, as an argument and returns a 2-dimensional array
 # representing the first n levels of pascal's triangle.
 def pascals_triangle(n)
-
+  return [[1]] if n == 1
+  triangle = [[1]]
+  (2..n).each do |i|
+    last_level = triangle.last
+    next_level = Array.new(i, 0)
+    next_level[0] = 1
+    next_level[-1] = 1
+    (1...i - 1).each do |j|
+      next_level[j] = last_level[j - 1] + last_level[j]
+    end
+    triangle << next_level
+  end
+  triangle
 end
 
 # p pascals_triangle(5)
