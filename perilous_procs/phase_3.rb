@@ -3,7 +3,8 @@
 # they are passed into the second proc. This method should mutate the input 
 # array and return nil.
 def selected_map!(arr, prc_1, prc_2)
-
+  arr.map! { |ele| (prc_1.call(ele))? prc_2.call(ele) : ele }
+  nil
 end
 
 # is_even = Proc.new { |n| n.even? }
@@ -31,7 +32,8 @@ end
 # the result of the second proc is given to the third proc
 # the result of third proc is the final result
 def chain_map(val, prcs)
-
+  prcs.each { |prc| val = prc.call(val) }
+  val
 end
 
 # add_5 = Proc.new { |n| n + 5 }
@@ -51,7 +53,12 @@ end
 # returns true for multiple procs, then the suffixes are appended in the order 
 # that they appear in the input hash.
 def proc_suffix(sent, hash)
-
+  arr = sent.split(" ").map do |word|
+    new_word = word
+    hash.keys.each { |prc| new_word += hash[prc] if prc.call(word) }
+    new_word
+  end
+  arr.join(" ")
 end
 
 # contains_a = Proc.new { |w| w.include?('a') }
@@ -92,7 +99,18 @@ end
 # into the array that corresponds to the proc that appears first in the 
 # arguments.
 def proctition_platinum(arr, *prcs)
-
+  hash = {}
+  (1..prcs.length).each { |i| hash[i] = [] }
+  added = []
+  prcs.each_with_index do |prc, i|
+    arr.each do |ele|
+      if prc.call(ele) && !added.include?(ele)
+        hash[i + 1] << ele
+        added << ele
+      end
+    end
+  end
+  hash
 end
 
 # is_yelled = Proc.new { |s| s[-1] == '!' }
@@ -119,7 +137,12 @@ end
 # key procs, then the value proc changes should be applied in the order that 
 # they appear in the hash.
 def procipher(sent, hash)
-
+  arr = sent.split(" ").map do |word|
+    new_word = word
+    hash.keys.each { |prc| new_word = hash[prc].call(new_word) if prc.call(word) }
+    new_word
+  end
+  arr.join(" ")
 end
 
 # is_yelled = Proc.new { |s| s[-1] == '!' }
@@ -163,7 +186,18 @@ end
 # key procs, then only the value proc that appears earliest in the hash should 
 # be applied.
 def picky_procipher(sent, hash)
-
+  arr = sent.split(" ").map do |word|
+    new_word = word
+    changed = false
+    hash.keys.each do |prc|
+      if prc.call(word) && !changed
+        new_word = hash[prc].call(word)
+        changed = true
+      end
+    end
+    new_word
+  end
+  arr.join(" ")
 end
 
 # is_yelled = Proc.new { |s| s[-1] == '!' }
