@@ -2,7 +2,7 @@
 # containing elements of the original array that either return true for both 
 # procs or return false for both procs.
 def xnor_select(arr, prc_1, prc_2)
-
+  arr.select { |ele| (prc_1.call(ele) && prc_2.call(ele)) || (!prc_1.call(ele) && !prc_2.call(ele)) }
 end
 
 # is_even = Proc.new { |n| n % 2 == 0 }
@@ -16,7 +16,7 @@ end
 # array that return true when given to the block. Solve this without using 
 # Array.reject!.
 def filter_out!(arr, &prc)
-
+  arr.select! { |ele| !prc.call(ele) }
 end
 
 # arr_1 = [10, 6, 3, 2, 5 ]
@@ -39,8 +39,9 @@ end
 # returns a new array where each element of the original array is repeatedly run
 # through the block n times. If the number argument is not passed in, then the
 # elements should be run through the block once.
-def multi_map(arr, &prc)
-
+def multi_map(arr, n = 1, &prc)
+  n.times { arr = arr.map { |ele| prc.call(ele) } }
+  arr
 end
 
 # p multi_map(['pretty', 'cool', 'huh?']) { |s| s + '!'}      # ["pretty!", "cool!", "huh?!"]
@@ -56,7 +57,7 @@ end
 # the new array has two partitions; the order among elements in the same 
 # partition should be the same as their relative order in the input array.
 def proctition(arr, &prc)
-
+  arr.select { |ele| prc.call(ele) } + arr.select { |ele| !prc.call(ele) }
 end
 
 # p proctition([4, -5, 7, -10, -2, 1, 3]) { |el| el > 0 }
