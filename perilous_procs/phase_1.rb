@@ -2,7 +2,8 @@
 # indicating whether or not at least one of the elements of the array returns 
 # true when given to the block. Solve this using Array#each.
 def some?(arr, &prc)
-
+  arr.each { |ele| return true if prc.call(ele) }
+  false
 end
 
 # p some?([3, 1, 11, 5]) { |n| n.even? }                                # false
@@ -16,7 +17,8 @@ end
 # a boolean indicating whether or not there are exactly n elements that return 
 # true when given to the block. Solve this using Array#each.
 def exactly?(arr, n, &prc)
-
+  arr.each { |ele| n -= 1 if prc.call(ele) }
+  n == 0
 end
 
 # p exactly?(['A', 'b', 'C'], 2) { |el| el == el.upcase }         # true
@@ -33,7 +35,9 @@ end
 # where elements of the original array are removed if they return true when 
 # given to the block. Solve this using Array#each.
 def filter_out(arr, &prc)
-
+  new_arr = []
+  arr.each { |ele| new_arr << ele if !prc.call(ele) }
+  new_arr
 end
 
 # p filter_out([10, 6, 3, 2, 5 ]) { |x| x.odd? }      # [10, 6, 2]
@@ -45,7 +49,8 @@ end
 # returns a boolean indicating whether or not at least n elements of the array 
 # return true when given to the block. Solve this using Array#each.
 def at_least?(arr, n, &prc)
-
+  arr.each { |ele| n -= 1 if prc.call(ele) }
+  n <= 0
 end
 
 # p at_least?(['sad', 'quick', 'timid', 'final'], 2) { |s| s.end_with?('ly') }
@@ -73,7 +78,8 @@ end
 # indicating whether or not all elements of the array return true when given 
 # to the block. Solve this using Array#each.
 def every?(arr, &prc)
-
+  arr.each { |ele| return false if !prc.call(ele) }
+  true
 end
 
 # p every?([3, 1, 11, 5]) { |n| n.even? }                                 # false
@@ -87,7 +93,8 @@ end
 # a boolean indicating whether no more than n elements of the array return true 
 # when given to the block. Solve this using Array#each.
 def at_most?(arr, n, &prc)
-
+  arr.each { |ele| n -= 1 if prc.call(ele) }
+  n >= 0
 end
 
 # p at_most?([-4, 100, -3], 1) { |el| el > 0 }                         # true
@@ -103,7 +110,9 @@ end
 # If  no element of returns true, then the method should return nil. Solve this 
 # using Array#each.
 def first_index(arr, &prc)
-
+  i = 0
+  arr.each { |ele| return i if prc.call(ele); i += 1 }
+  nil
 end
 
 # p first_index(['bit', 'cat', 'byte', 'below']) { |el| el.length > 3 }           # 2
