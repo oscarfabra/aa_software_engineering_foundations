@@ -8,7 +8,25 @@
 # The first three Mersenne primes are 3, 7, and 31. The method that accepts a 
 # number, n, as an argument and returns the n-th Mersenne prime.
 def mersenne_prime(n)
+  m_prime = 3
+  while n > 1
+    i = m_prime + 1
+    i += 1 until is_prime?(i) && one_less_than_a_power_of_two?(i)
+    m_prime = i
+    n -= 1
+  end
+  m_prime
+end
 
+def is_prime?(n)
+  return false if n < 2
+  (2..n / 2).to_a.none? { |i| n % i == 0 }
+end
+
+def one_less_than_a_power_of_two?(n)
+  i = 2
+  i *= 2 while i < n
+  i - 1 == n
 end
 
 # p mersenne_prime(1) # 3
@@ -36,7 +54,16 @@ end
 # whether or not that word's number encoding is a triangular number. Assumes 
 # that the argument contains lowercase letters.
 def triangular_word?(word)
+  alpha = ('a'..'z').to_a
+  num = 0
+  word.each_char { |c| num += alpha.index(c) + 1 }
+  triangular_number?(num)
+end
 
+def triangular_number?(n)
+  i = 1
+  i += 1 while (i * (i + 1)) / 2 < n
+  (i * (i + 1)) / 2 == n
 end
 
 # p triangular_word?('abc')       # true
@@ -64,7 +91,23 @@ end
 # # example 2
 # [3, 5, 6, 2, 1] -> [3, 2, 1] -> [1]
 def consecutive_collapse(arr)
+  new_arr = Array.new(arr)
+  new_arr = collapse_one_pair(new_arr) while consecutive_pair?(new_arr)
+  new_arr
+end
 
+def consecutive_pair?(arr)
+  return false if arr.length == 1
+  (0...arr.length - 1).each do |i|
+    return true if (arr[i] - arr[i + 1]).abs == 1
+  end
+  false
+end
+
+def collapse_one_pair(arr)
+  (0...arr.length - 1).each do |i|
+    return arr[0...i] + arr[i + 2..-1] if (arr[i] - arr[i + 1]).abs == 1
+  end
 end
 
 # p consecutive_collapse([3, 4, 1])                     # [1]
@@ -98,7 +141,29 @@ end
 # than a given number, because 2 is the smallest prime. When a smaller prime 
 # cannot be calculated, replace the element with nil.
 def pretentious_primes(arr, n)
+  arr.map do |ele|
+    (n > 0)? nearest_prime_greater(ele, n) : nearest_prime_smaller(ele, n)
+  end
+end
 
+def nearest_prime_greater(ele, n)
+  i = ele
+  while n > 0
+    i += 1
+    i += 1 until is_prime?(i)
+    n -= 1
+  end
+  i
+end
+
+def nearest_prime_smaller(ele, n)
+  i = ele
+  while n < 0 && i >= 2
+    i -= 1
+    i -= 1 until is_prime?(i) || i < 2
+    n += 1
+  end
+  (i < 2)? nil : i
 end
 
 # p pretentious_primes([4, 15, 7], 1)           # [5, 17, 11]
