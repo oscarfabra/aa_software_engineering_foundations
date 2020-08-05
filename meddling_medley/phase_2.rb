@@ -2,7 +2,9 @@
 # array containing the elements that return true when passed into all of the 
 # given procs.
 def conjunct_select(arr, *prcs)
-
+  arr.select do |ele|
+    prcs.all? { |prc| prc.call(ele) }
+  end
 end
 
 # is_positive = Proc.new { |n| n > 0 }
@@ -27,7 +29,24 @@ end
 # remain capitalized in the translated sentence. Vowels are the letters a, e, 
 # i, o, u.
 def convert_pig_latin(sent)
+  arr = sent.split(" ").map do |word|
+    if word.length < 3
+      word
+    elsif "aeiou".include?(word[0].downcase)
+      word + "yay"
+    else
+      translate_non_vowel_word(word)
+    end
+  end
+  arr.join(" ")
+end
 
+def translate_non_vowel_word(word)
+  i = 0
+  i += 1 until "aeiou".include?(word[i])
+  new_word = word[i..-1] + word[0...i] + "ay"
+  new_word.capitalize! if word == word.capitalize
+  new_word
 end
 
 # p convert_pig_latin('We like to eat bananas') # "We ikelay to eatyay ananasbay"
@@ -50,7 +69,22 @@ end
 # remain capitalized in the translated sentence. Vowels are the letters a, e,
 # i, o, u.
 def reverberate(sent)
+  arr = sent.split(" ").map do |word|
+    if word.length < 3
+      word
+    elsif "aeiou".include?(word[-1])
+      word + word.downcase
+    else
+      translate_word_ends_with_non_vowel(word)
+    end
+  end
+  arr.join(" ")
+end
 
+def translate_word_ends_with_non_vowel(word)
+  i = word.length - 1
+  i -= 1 until "aeiou".include?(word[i].downcase)
+  word + word[i..-1]
 end
 
 # p reverberate('We like to go running fast') # "We likelike to go runninging fastast"
@@ -62,7 +96,9 @@ end
 # array containing the elements that return true when passed into at least one 
 # of the given procs.
 def disjunct_select(arr, *prcs)
-
+  arr.select do |ele|
+    prcs.any? { |prc| prc.call(ele) }
+  end
 end
 
 # longer_four = Proc.new { |s| s.length > 4 }
@@ -95,7 +131,24 @@ end
 # Note that words that contain no vowels should remain unchanged. Vowels are 
 # the letters a, e, i, o, u.
 def alternating_vowel(sent)
+  arr = sent.split(" ").map.with_index do |word, i|
+    (i.even?)? remove_first_vowel(word) : remove_last_vowel(word)
+  end
+  arr.join(" ")
+end
 
+def remove_first_vowel(word)
+  i = 0
+  i += 1 until i == word.length || "aeiou".include?(word[i].downcase)
+  return word if i == word.length
+  word[0..i - 1] + word[i + 1..-1]
+end
+
+def remove_last_vowel(word)
+  i = word.length - 1
+  i -= 1 until i == -1 || "aeiou".include?(word[i].downcase)
+  return word if i == -1
+  word[0..i - 1] + word[i + 1..-1]
 end
 
 # p alternating_vowel('panthers are great animals') # "pnthers ar grat animls"
@@ -113,7 +166,21 @@ end
 # remain capitalized in the translated sentence. Vowels are the letters a, e,
 # i, o, u.
 def silly_talk(sent)
+  arr = sent.split(" ").map do |word|
+    if "aeiou".include?(word[-1].downcase)
+      word + word[-1].downcase
+    else
+      translate_to_silly(word)
+    end
+  end
+  arr.join(" ")
+end
 
+def translate_to_silly(word)
+  arr = word.split("").map do |c|
+    ("aeiou".include?(c.downcase))? c + "b" + c.downcase : c
+  end
+  arr.join
 end
 
 # p silly_talk('Kids like cats and dogs') # "Kibids likee cabats aband dobogs"
@@ -127,7 +194,16 @@ end
 # streak. If a letter does not form a streak (meaning that it appears alone), 
 # then do not add a number after it.
 def compress(str)
-
+  new_str = ""
+  i = 0
+  while i < str.length
+    new_str += str[i]
+    j = i
+    j += 1 until j == str.length || str[j] != str[i]
+    new_str += (j - i).to_s if j - i > 1
+    i = j
+  end
+  new_str
 end
 
 # p compress('aabbbbc')   # "a2b4c"
