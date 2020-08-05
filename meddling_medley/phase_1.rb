@@ -1,7 +1,11 @@
 # Accepts a string as an argument and returns the count of the number of times 
 # the same character appears consecutively in the given string.
 def duos(str)
-
+  count = 0
+  (0...str.length - 1).each do |i|
+    count += 1 if str[i] == str[i + 1]
+  end
+  count
 end
 
 # p duos('bootcamp')      # 1
@@ -14,7 +18,10 @@ end
 # where every word is replaced with it's corresponding value in the hash. If a 
 # word does not exist as a key of the hash, then it should remain unchanged.
 def sentence_swap(sent, hash)
-
+  arr = sent.split(" ").map do |word|
+    (hash.has_key?(word))? hash[word] : word
+  end
+  arr.join(" ")
 end
 
 # p sentence_swap('anything you can do I can do',
@@ -34,7 +41,9 @@ end
 # value of the new hash should be the result of the original values when
 # passed into the proc.
 def hash_mapped(hash, prc_1, &prc_2)
-
+  new_hash = {}
+  hash.each { |k, v| new_hash[prc_2.call(k)] = prc_1.call(v) }
+  new_hash
 end
 
 # double = Proc.new { |n| n * 2 }
@@ -49,7 +58,11 @@ end
 # characters of the string that appeared more than twice. The characters in the
 # output array should appear in the same order they occur in the input string.
 def counted_characters(str)
-
+  hash = Hash.new(0)
+  str.each_char { |c| hash[c] += 1 }
+  arr = []
+  hash.each { |k, v| arr << k if v > 2 }
+  arr
 end
 
 # p counted_characters("that's alright folks") # ["t"]
@@ -60,7 +73,10 @@ end
 # Accepts a string as an argument and returns a boolean indicating whether or 
 # not the string contains three of the same character consecutively.
 def triplet_true?(str)
-
+  (0...str.length - 2).each do |i|
+    return true if str[i] == str[i + 1] && str[i + 1] == str[i + 2]
+  end
+  false
 end
 
 # p triplet_true?('caaabb')        # true
@@ -75,7 +91,16 @@ end
 # be replaced with a question mark ('?'). Space characters (' ') should remain 
 # unchanged.
 def energetic_encoding(str, hash)
-
+  arr = str.split("").map do |c|
+    if hash.has_key?(c)
+      hash[c]
+    elsif c != ' '
+      '?'
+    else
+      c
+    end
+  end
+  arr.join
 end
 
 # p energetic_encoding('sent sea',
@@ -97,7 +122,15 @@ end
 # string where every letter is repeated multiple times given based on the 
 # number that appears directly after the letter.
 def uncompress(str)
-
+  new_str = ""
+  i = 0
+  while i < str.length
+    letter = str[i]
+    num = str[i + 1]
+    new_str += letter * num.to_i
+    i += 2
+  end
+  new_str
 end
 
 # p uncompress('a2b4c1') # 'aabbbbc'
