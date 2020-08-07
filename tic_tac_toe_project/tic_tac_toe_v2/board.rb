@@ -1,13 +1,13 @@
 class Board
 
   # Creates a new Board instance
-  def initialize
-    @grid = Array.new(3) { Array.new(3, '_') }
+  def initialize(n)
+    @grid = Array.new(n) { Array.new(n, '_') }
   end
 
   # Returns true if the position is not out of bounds
   def valid?(pos)
-    pos[0] >= 0 && pos[1] >= 0 && pos[0] <= 2 && pos[1] <= 2
+    pos[0] >= 0 && pos[1] >= 0 && pos[0] < @grid.length && pos[1] < @grid.length 
   end
 
   # Returns true if the specified position does not contain a player's mark

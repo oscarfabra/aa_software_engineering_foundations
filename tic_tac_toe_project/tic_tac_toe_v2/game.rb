@@ -4,16 +4,18 @@ require_relative 'human_player.rb'
 class Game
 
   # Creates a new Game instance
-  def initialize(p_1_mark, p_2_mark)
-    @player_1 = HumanPlayer.new(p_1_mark)
-    @player_2 = HumanPlayer.new(p_2_mark)
-    @board = Board.new
-    @current_p = @player_1
+  def initialize(n, *marks)
+    raise "marks should be unique" if marks != marks.uniq
+    @players = []
+    marks.each { |mark| @players << HumanPlayer.new(mark) }
+    @board = Board.new(n)
+    @current_p = @players[0]
   end
 
   # Sets the current player to the other player
   def switch_turn
-    (@current_p == @player_1)? @current_p = @player_2 : @current_p = @player_1
+    @players.rotate!
+    @current_p = @players[0]
   end
 
   # Contains the main game loop
