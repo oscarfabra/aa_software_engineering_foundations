@@ -46,25 +46,32 @@ class List
 
   # Prints the label of the list and each item's title and deadline
   def print
-    puts "".ljust(42, '-')
-    puts "#{@label.upcase}".rjust(24)
-    puts "".ljust(42, '-')
-    puts "Index | Item".ljust(29) + "| Deadline".ljust(13)
-    puts "".ljust(42, '-')
+    puts "".ljust(49, '-')
+    puts "#{@label.upcase}".center(49)
+    puts "".ljust(49, '-')
+    puts "Index | Item".ljust(29) + "| Deadline".ljust(13) + "| Done".ljust(7)
+    puts "".ljust(49, '-')
     @items.each_with_index do |item, i|
-      puts "#{i}".ljust(6) + "| " + item.title.ljust(21) + "| " + item.deadline
+      item_row = "#{i}".ljust(6) 
+      item_row += "| #{item.title}".ljust(23)
+      item_row += "| #{item.deadline}".ljust(13)
+      item_row += "| [#{(item.done)? "✓" : " "}]"
+      puts item_row
     end
-    puts "".ljust(42, '-')
+    puts "".ljust(49, '-')
   end
 
   # Prints all information for the item at the given index
   def print_full_item(index)
     return nil if !self.valid_index?(index)
     item = @items[index]
-    puts "".ljust(42, '-')
-    puts "#{item.title}".ljust(32) + item.deadline
-    puts "#{item.description}".ljust(42)
-    puts "".ljust(42, '-')
+    puts "".ljust(49, '-')
+    item_header = "#{item.title}".ljust(32) 
+    item_header += "#{item.deadline}".ljust(10)
+    item_header += "[#{(item.done)? "✓" : " "}]".rjust(7)
+    puts item_header
+    puts "#{item.description}".ljust(49)
+    puts "".ljust(49, '-')
   end
 
   # Prints all information for the item at the top of the list
@@ -97,5 +104,24 @@ class List
   # Sorts the items in increasing order according to their deadlines
   def sort_by_date!
     @items.sort_by! { |item| item.deadline }
+  end
+
+  # Flips the current state of the item at the given index
+  def toggle_item(index)
+    return false if !self.valid_index?(index)
+    @items[index].toggle
+    true
+  end
+
+  # Permanently deletes the item of the list at the given index
+  def remove_item(index)
+    return false if !self.valid_index?(index)
+    @items.delete_at(index)
+    true
+  end
+
+  # Removes all items that are currently marked as done
+  def purge
+    @items.delete_if { |item| item.done }
   end
 end

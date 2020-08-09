@@ -27,6 +27,12 @@ class TodoBoard
       @list.print_priority
     when 'print'
       (args.length == 0)? @list.print : @list.print_full_item(args[0].to_i)
+    when 'toggle'
+      @list.toggle_item(args[0].to_i)
+    when 'rm'
+      @list.remove_item(args[0].to_i)
+    when 'purge'
+      @list.purge
     when 'quit'
       return false
     else
