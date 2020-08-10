@@ -1,2 +1,2 @@
-# app_academy_open
-Solutions to problems based on App Academy Open's Software Engineering Bootcamp
+# App Academy Open - Software Engineering Foundations
+Solutions to problems for App Academy Open's Software Engineering Foundations course
